@@ -2,9 +2,14 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #333333;
 }
 
+@theme {
+  --color-qantas-red: #E00E00;
+  --color-qantas-gray: #99a1af;
+  --color-qantas-green: #016630;
+}
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
