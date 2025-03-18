@@ -1,8 +1,30 @@
+'use client'
+import CardImage from "@/components/CardImage";
+import CardInfo from "@/components/CardInfo";
+import CardPrice from "@/components/CardPrice";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 const Result: React.FC = () => {
+
+	const [result, setResult] = useState<any[]>([])
+	const [loading, setLoading] = useState<boolean>(true)
+
+	const FREE_CANCELLATION = "FREE_CANCELLATION"
+
+	useEffect(() => {
+		// Fetch JSON data from the public directory on component mount
+		fetch("/api/data.json")
+			.then((response) => response.json())
+			.then((data) => {
+				setResult(data.results)
+				setLoading(false)
+			})
+			.catch((error) => console.error("Error fetching data:", error));
+	}, []);
+
 	return (
-		<div className="lg:container mx-auto p-4 min-h-screen">
+		<div className="lg:container mx-auto p-4 min-h-screen min-w-[300px]">
 			<header className="mb-4">
 				<Image
 					src="/qantas-logo.png"
@@ -10,63 +32,49 @@ const Result: React.FC = () => {
 					className="h-12 w-auto"
 					width={412}
 					height={80}
+					priority={true}
 				/>
 			</header>
 			<main>
 				<div className="md:flex justify-between items-center mb-3">
 					<p className="text-2xl font-bold mb-2 md:mb-0">
-						5 <span className="italic font-normal">hotels in</span> Sydney.
+						{loading
+							? "Loading..."
+							: <>{result.length} < span className="italic font-normal">hotels in</span> Sydney.</>
+						}
 					</p>
-					<div className="flex gap-2 items-center">
-						<p>Sort by:</p>
-						<select className="text-sm border border-gray-300 rounded-md px-3 py-2">
-							<option>Price (high-low)</option>
-							<option>Price (low-high)</option>
-						</select>
-					</div>
+					{!loading && 
+						<div className="flex gap-2 items-center">
+							<label htmlFor="sort-options" className="sr-only">Sort hotels by</label>
+							<p>Sort by:</p>
+							<select className="text-sm border border-gray-300 rounded-md px-3 py-2">
+								<option>Price (high-low)</option>
+								<option>Price (low-high)</option>
+							</select>
+						</div>
+					}
 				</div>
 
-				{Array.from({ length: 5 }).map((item, index) => (
+				{!loading && result.map((item, index) => (
 					<div key={index} className="flex flex-col md:flex-row gap-2 md:gap-5">
-
-						<div className="w-full max-h-[200px] md:w-3/12 min-w-[145] relative flex justify-center items-center aspect-[145/125] md:my-3 bg-gray-200">
-							<span className="absolute top-2 left-0 bg-white text-qantas-red text-sm font-bold p-2">Exclusive Deal</span>
-							{/* <img
-								src="https://unsplash.it/145/125/?random"
-								alt="Hotel"
-								className="object-cover w-full h-full" /> */}
-							<Image
-								src="https://unsplash.it/145/125/?random"
-								alt="Hotel"
-								className="object-cover w-full h-full"
-								width={145}
-								height={125}
-								unoptimized={true}
-							/>
-						</div>
+						<CardImage
+							url={item?.property?.previewImage?.url}
+							caption={item?.property?.previewImage?.caption}
+							promotion={item?.offer?.promotion?.title}
+						/>
 
 						<div className="md:flex grow justify-between gap-[100px] pt-3 pb-2 md:border-y border-solid border-gray-200 min-w-0">
-							<div className="flex flex-col justify-between min-w-0">
-								<div className="mb-2 md:mb-0">
-									<div className="md:flex gap-2">
-										<h3 className="font-medium text-2xl text-ellipsis overflow-hidden whitespace-nowrap">Courtyard by Marriott Sydney-North Ryde</h3>
-										<div className="bg-amber-300 shrink-0 px-5">Rating System</div>
-									</div>
-									<p className="text-qantas-gray mb-2 md:mb-3">7-11 Talavera Rd, North Ryde</p>
-									<a href="#" className="text-qantas-red underline">Deluxe Balcony Room</a>
-								</div>
-								<p className="text-qantas-green mb-2 md:mb-0">Free cancellation</p>
-							</div>
-							<div className="flex flex-col shrink-0 md:border-0 md:items-end justify-center border-t border-solid border-gray-200 pt-4 pr-2">
-								<p className="text-sm mb-1">
-									<span className="font-bold">1</span> night total (AUD)
-								</p>
-								<div className="flex items-start">
-									<span className="text-2xl">$</span>
-									<span className="text-4xl">150</span>
-								</div>
-								<p className="text-2xl text-qantas-red mt-2">Save $30~</p>
-							</div>
+							<CardInfo
+								name={item?.property?.title}
+								address={item?.property?.address}
+								offerName={item?.offer?.name}
+								freeCancellation={item?.offer?.cancellationOption?.cancellationType === FREE_CANCELLATION}
+							/>
+							<CardPrice
+								currency={item?.offer?.displayPrice?.currency}
+								amount={item?.offer?.displayPrice?.amount}
+								saving={item?.offer?.savings?.amount}
+							/>
 						</div>
 					</div>
 				))}
