@@ -9,6 +9,8 @@
   --color-qantas-red: #E00E00;
   --color-qantas-gray: #99a1af;
   --color-qantas-green: #016630;
+  --color-qantas-yellow: #ffd230;
+  --color-qantas-star: #d1d5dc;
 }
 @theme inline {
   --color-background: var(--background);
@@ -28,4 +30,18 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.star-half{
+  color: var(--color-qantas-star);
+  background: linear-gradient(
+    to right,
+    var(--color-qantas-yellow),
+    var(--color-qantas-yellow) 50%,
+    var(--color-qantas-star) 50%,
+    var(--color-qantas-star)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

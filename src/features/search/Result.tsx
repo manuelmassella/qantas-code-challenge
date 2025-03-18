@@ -63,12 +63,13 @@ const Result: React.FC = () => {
 							promotion={item?.offer?.promotion?.title}
 						/>
 
-						<div className="md:flex grow justify-between gap-[100px] pt-3 pb-2 md:border-y border-solid border-gray-200 min-w-0">
+						<div className="md:flex grow justify-between gap-[100px] md:pt-3 pb-2 md:border-y border-solid border-gray-200 min-w-0">
 							<CardInfo
 								name={item?.property?.title}
 								address={item?.property?.address}
 								offerName={item?.offer?.name}
 								freeCancellation={item?.offer?.cancellationOption?.cancellationType === FREE_CANCELLATION}
+								rating={item?.property?.rating}
 							/>
 							<CardPrice
 								currency={item?.offer?.displayPrice?.currency}
