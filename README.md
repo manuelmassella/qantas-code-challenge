@@ -54,7 +54,7 @@ The implementation follows a structured development process:
 - The current test suite focuses on key functionality, such as hotel list price sorting and the correct display of hotel information.
 - While these tests cover the primary requirements, additional test cases could be added to improve coverage, especially for user interactions and edge cases.
 
-===
+### Conclusions
 
 This project demonstrates a scalable and maintainable approach to front-end development while adhering to best practices. Future improvements can focus on refining the UI, optimizing performance, and expanding test coverage.
 
