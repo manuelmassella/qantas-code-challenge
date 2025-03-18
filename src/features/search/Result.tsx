@@ -12,6 +12,24 @@ const Result: React.FC = () => {
 
 	const FREE_CANCELLATION = "FREE_CANCELLATION"
 
+	const handleSort = (sortOption: string) => {
+		const sortedResults = [...result].sort((a, b) => {
+			
+			const priceA = a?.offer?.displayPrice?.amount || 0;
+			const priceB = b?.offer?.displayPrice?.amount || 0;
+
+			if (sortOption === "low") {
+				return priceA - priceB;
+			} else if (sortOption === "high") {
+				return priceB - priceA;
+			}
+			
+			return 0;
+		});
+
+		setResult(sortedResults);
+	};
+
 	useEffect(() => {
 		// Fetch JSON data from the public directory on component mount
 		fetch("/api/data.json")
@@ -47,9 +65,14 @@ const Result: React.FC = () => {
 						<div className="flex gap-2 items-center">
 							<label htmlFor="sort-options" className="sr-only">Sort hotels by</label>
 							<p>Sort by:</p>
-							<select className="text-sm border border-gray-300 rounded-md px-3 py-2">
-								<option>Price (high-low)</option>
-								<option>Price (low-high)</option>
+							<select 
+								id="sort-options"
+								className="text-sm border border-gray-300 rounded-md px-3 py-2"
+								onChange={(e) => handleSort(e.target.value)}
+							>
+								<option value="">- Select -</option>
+								<option value="high">Price (high-low)</option>
+								<option value="low">Price (low-high)</option>
 							</select>
 						</div>
 					}
